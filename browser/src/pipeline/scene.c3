@@ -6,8 +6,12 @@ import render;
 import raylib6::rl;
 import std::io;
 
+const ARENA_SIZE = 64 * 4096; // 64 pages
+
 struct Scene
 {
+    DynamicArenaAllocator arena;
+	Allocator allocator;
     Element root;
     Vec2 viewport;
     FontSet fonts;
@@ -15,9 +19,35 @@ struct Scene
     EmojiCache emoji_cache;
 }
 
-fn void Scene.free(&self)
+fn void Scene.init(&self)
+{
+	self.arena.init(mem, ARENA_SIZE);
+	self.root.init(&self.arena);
+}
+
+fn void Scene.free_elements(&self)
+{
+	self.arena.reset();
+	self.arena.free();
+}
+
+fn void Scene.free_fonts(&self)
+{
+	foreach (RLFont font : self.fonts)
+	{
+		rl::unload_font(font);
+	}
+}
+
+fn void Scene.free_emoji_cache(&self)
 {
 	self.emoji_cache.free();
+}
+
+fn void Scene.free(&self)
+{
+	self.free_fonts();
+	self.free_emoji_cache();
 }
 
 fn void Scene.run_passes(&self)

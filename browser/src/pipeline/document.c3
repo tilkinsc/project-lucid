@@ -6,6 +6,8 @@ import std::math::vector;
 import std::collections::list;
 import raylib6::rl;
 
+const CHILDREN_INITIAL_CAPACITY = 8;
+
 enum ElementKind
 {
 	PANEL,
@@ -72,35 +74,49 @@ struct Element
     DirtyFlags dirtyFlags;
 }
 
+fn void Element.init(&self, Allocator allocator)
+{
+    self.children.init(allocator, CHILDREN_INITIAL_CAPACITY);
+}
+
+fn void Element.free(&self)
+{
+	foreach (Element* child : self.children)
+	{
+		child.free();
+	}
+}
+
 fn Element* Element.make_text(&self, String text, float fontSize, RLColor color)
 {
-    TextData* td  = mem::new(TextData);
-    td.raw        = text;
-    td.fontSize   = fontSize;
-    td.dirty      = true;
+    TextData* td = mem::new(TextData);
+    td.raw       = text;
+    td.fontSize  = fontSize;
+    td.dirty     = true;
 
-    self.kind               = ElementKind.TEXT;
-    self.data               = td;
-    self.render.color       = color;
-    self.render.visible     = true;
-    self.render.opacity     = 1.0f;
-    self.layout.sizeScale   = { 0, 0 };
-    self.layout.sizeOffset  = { 0, 0 };
+    self.kind              = ElementKind.TEXT;
+    self.data              = td;
+    self.render.color      = color;
+    self.render.visible    = true;
+    self.render.opacity    = 1.0f;
+    self.layout.sizeScale  = { 0, 0 };
+    self.layout.sizeOffset = { 0, 0 };
     return self;
 }
 
 fn Element* Element.make_panel(&self, float x, float y, float width, float height, RLColor color, bool clip)
 {
-    self.kind                   = ElementKind.PANEL;
-    self.render.color           = color;
-    self.render.visible         = true;
-    self.render.opacity         = 1.0f;
-    self.layout.positionOffset  = { x, y };
-    self.layout.sizeOffset      = { width, height };
-    self.layout.clipChildren    = clip;
+    self.kind                  = ElementKind.PANEL;
+    self.render.color          = color;
+    self.render.visible        = true;
+    self.render.opacity        = 1.0f;
+    self.layout.positionOffset = { x, y };
+    self.layout.sizeOffset     = { width, height };
+    self.layout.clipChildren   = clip;
     return self;
 }
 
+<* @require child != null *>
 fn void Element.add_child(&self, Element* child)
 {
     child.parent = self;

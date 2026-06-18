@@ -1,7 +1,7 @@
 module render;
+
 import raylib6::rl;
 import std::collections::list;
-import std::collections::map;
 import std::core::mem;
 import std::core::string;
 import std::io;
@@ -32,30 +32,9 @@ struct RichText
     List{TextRun} runs;
 }
 
-struct EmojiCache
+fn void RichText.init(&self, Allocator allocator)
 {
-	HashMap{String, RLTexture2D} textures;
-}
-
-fn RLTexture2D? EmojiCache.get_texture(&self, String emoji)
-{
-	RLTexture2D? output = self.textures.get(emoji);
-	if (catch output) {
-		RLTexture2D tex = rl::load_texture((ZString)"assets/emoji/".concat(tmem, emoji));
-		if (tex.id != 0) {
-			self.textures.set(emoji, tex);
-			output = tex;
-		}
-	}
-	return output;
-}
-
-fn void EmojiCache.free(&self)
-{
-	self.textures.@each(;key, value) {
-        rl::unload_texture(value);
-	};
-    self.textures.clear();
+	self.runs.init(allocator);
 }
 
 fn void RichText.free(&self)
@@ -67,7 +46,7 @@ fn void RichText.free(&self)
     self.runs.free();
 }
 
-fn FontStyle compute_style(List{FontStyle} stack)
+fn FontStyle compute_style(List{FontStyle} stack) @local
 {
     bool bold = false;
     bool italic = false;
@@ -82,7 +61,7 @@ fn FontStyle compute_style(List{FontStyle} stack)
     return FontStyle.NORMAL;
 }
 
-fn usz utf8_seq_len(char lead)
+fn usz utf8_seq_len(char lead) @local
 {
     if ((lead & 0x80) == 0)    return 1;
     if ((lead & 0xE0) == 0xC0) return 2;
@@ -91,7 +70,7 @@ fn usz utf8_seq_len(char lead)
     return 1;
 }
 
-fn uint decode_codepoint(String s, usz i)
+fn uint decode_codepoint(String s, usz i) @local
 {
     switch (utf8_seq_len(s[i]))
     {
@@ -109,7 +88,7 @@ fn uint decode_codepoint(String s, usz i)
     }
 }
 
-fn bool is_emoji_codepoint(uint cp)
+fn bool is_emoji_codepoint(uint cp) @local
 {
     return cp >= 0x1F000
         || cp == 0x2764
@@ -120,17 +99,17 @@ fn bool is_emoji_codepoint(uint cp)
         || cp == 0x2603;
 }
 
-fn bool is_fitzpatrick(uint cp)
+fn bool is_fitzpatrick(uint cp) @local
 {
     return cp >= 0x1F3FB && cp <= 0x1F3FF;
 }
 
-fn bool is_zwj_or_vs(uint cp)
+fn bool is_zwj_or_vs(uint cp) @local
 {
     return cp == 0x200D || cp == 0xFE0F;
 }
 
-fn usz consume_emoji_sequence(String input, usz i)
+fn usz consume_emoji_sequence(String input, usz i) @local
 {
     usz seq = 0;
     while (i + seq < input.len)
@@ -151,7 +130,7 @@ fn usz consume_emoji_sequence(String input, usz i)
     return seq;
 }
 
-fn String emoji_key_from_text(String text)
+fn String emoji_key_from_text(String text) @local
 {
     DString key;
     usz i = 0;

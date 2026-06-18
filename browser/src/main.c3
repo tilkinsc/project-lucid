@@ -15,13 +15,9 @@ fn void main()
 	rl::set_target_fps(60);
 
 	RLFont interRegular = rl::load_font_ex("assets/font/inter/Inter_28pt-Regular.ttf", 64, null, 0);
-	defer rl::unload_font(interRegular);
 	RLFont interBold = rl::load_font_ex("assets/font/inter/Inter_28pt-Bold.ttf", 64, null, 0);
-	defer rl::unload_font(interBold);
 	RLFont interItalic = rl::load_font_ex("assets/font/inter/Inter_28pt-Italic.ttf", 64, null, 0);
-	defer rl::unload_font(interItalic);
 	RLFont interBoldItalic = rl::load_font_ex("assets/font/inter/Inter_28pt-BoldItalic.ttf", 64, null, 0);
-	defer rl::unload_font(interBoldItalic);
 
 	interRegular.texture.set_filter(BILINEAR);
 	interBold.texture.set_filter(BILINEAR);
@@ -29,6 +25,7 @@ fn void main()
 	interBoldItalic.texture.set_filter(BILINEAR);
 
 	Scene scene;
+	scene.allocator = mem;
 	scene.viewport = { 800, 600 };
 	scene.fonts = { interRegular, interBold, interItalic, interBoldItalic };
 	scene.dirtyFlags = DirtyFlags.MEASURE | DirtyFlags.LAYOUT | DirtyFlags.CLIP;
