@@ -31,14 +31,6 @@ fn void Scene.free_elements(&self)
 	self.arena.free();
 }
 
-fn void Scene.free_fonts(&self)
-{
-	foreach (RLFont font : self.fonts)
-	{
-		rl::unload_font(font);
-	}
-}
-
 fn void Scene.free_emoji_cache(&self)
 {
 	self.emoji_cache.free();
@@ -46,7 +38,7 @@ fn void Scene.free_emoji_cache(&self)
 
 fn void Scene.free(&self)
 {
-	self.free_fonts();
+	self.fonts.free();
 	self.free_emoji_cache();
 }
 
@@ -151,7 +143,7 @@ fn void Scene.render_pass(&self, Element* element)
                 switch (run.kind)
                 {
                     case RunKind.RUN_TEXT:
-                        RLFont font = font_for_style(&self.fonts, run.style);
+                        RLFont font = self.fonts.for_style(run.style);
                         rl::draw_text_ex(font, (ZString)run.text, { cursor, y }, td.fontSize, 0, element.render.color);
                         cursor += rl::measure_text_ex(font, (ZString)run.text, td.fontSize, 0).x;
                     case RunKind.RUN_EMOJI:

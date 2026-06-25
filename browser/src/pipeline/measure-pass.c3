@@ -33,24 +33,13 @@ fn Vec2 measure_rich_text(TextData* data, FontSet* fonts)
         switch (run.kind)
         {
             case RunKind.RUN_TEXT:
-                RLFont font = font_for_style(fonts, run.style);
+                RLFont font = fonts.for_style(run.style);
                 cursor += rl::measure_text_ex(font, (ZString)run.text, data.fontSize, 0).x;
             case RunKind.RUN_EMOJI:
                 cursor += data.fontSize;
         }
     }
     return { cursor, data.fontSize };
-}
-
-fn RLFont font_for_style(FontSet* fonts, FontStyle style)
-{
-    switch (style)
-    {
-        case FontStyle.BOLD:        return fonts.bold;
-        case FontStyle.ITALIC:      return fonts.italic;
-        case FontStyle.BOLD_ITALIC: return fonts.bold_italic;
-        default:                    return fonts.regular;
-    }
 }
 
 fn void Scene.measure_pass(&self, Element* el)

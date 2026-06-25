@@ -18,7 +18,6 @@ fn void main()
 	RLFont interBold = rl::load_font_ex("assets/font/inter/Inter_28pt-Bold.ttf", 64, null, 0);
 	RLFont interItalic = rl::load_font_ex("assets/font/inter/Inter_28pt-Italic.ttf", 64, null, 0);
 	RLFont interBoldItalic = rl::load_font_ex("assets/font/inter/Inter_28pt-BoldItalic.ttf", 64, null, 0);
-
 	interRegular.texture.set_filter(BILINEAR);
 	interBold.texture.set_filter(BILINEAR);
 	interItalic.texture.set_filter(BILINEAR);
