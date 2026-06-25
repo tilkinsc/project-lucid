@@ -127,22 +127,19 @@ Questions, challenges, and devil's advocate arguments are especially welcome. Th
 ## Licenses
 
 - **Lucid Browser**:
-Lucid Browser by Cody Tilkins
-Licensed under AGPL-3.0
-https://www.gnu.org/licenses/agpl-3.0.txt
-
-Source: https://github.com/tilkinsc/project-lucid
+Lucid Browser by Cody Tilkins  
+Licensed under AGPL-3.0  
+https://www.gnu.org/licenses/agpl-3.0.txt  
+Source: https://github.com/tilkinsc/project-lucid  
 
 - **Inter Font**:
-Inter font by Rasmus Andersson
-Licensed under SIL Open Font License 1.1
-https://openfontlicense.org/open-font-license-official-text/
-
-Source: https://github.com/rsms/inter
+Inter font by Rasmus Andersson  
+Licensed under SIL Open Font License 1.1  
+https://openfontlicense.org/open-font-license-official-text/  
+Source: https://github.com/rsms/inter  
 
 - **Emoji Assets**:
-Emoji graphics by Twemoji (Twitter/X contributors)
-Licensed under CC BY 4.0
-https://creativecommons.org/licenses/by/4.0/
-
-Source: https://github.com/twitter/twemoji
+Emoji graphics by Twemoji (Twitter/X contributors)  
+Licensed under CC BY 4.0  
+https://creativecommons.org/licenses/by/4.0/  
+Source: https://github.com/twitter/twemoji  
